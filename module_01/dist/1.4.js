@@ -17,4 +17,4 @@ let language = ['JS', 'TS', 'Python'];
 let digits = [1, 2, 3, 4];
 // tuple 
 let coordinates = [1, 5];
-let ageName = [100, 'Mr. R'];
+let ageName = [100, 'Mr. R', true];
