@@ -24,5 +24,3 @@ const juliette = {...personaInfo, ...affiliation}
 const sayHi = (...users: string[]) => {
     users.forEach((user: string)=> console.log(user))
 }
-
-nums()

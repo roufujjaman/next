@@ -17,4 +17,3 @@ const juliette = Object.assign(Object.assign({}, personaInfo), affiliation);
 const sayHi = (...users) => {
     users.forEach((user) => console.log(user));
 };
-nums();
