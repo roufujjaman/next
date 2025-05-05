@@ -39,10 +39,10 @@
 
     const roll: Roll = [1, 2, 3]
 
-    type Add = (n: number, m: number) => number;
-    // interface Add {
-    //     (n: number, m: number) : number
-    // }
+    // type Add = (n: number, m: number) => number;
+    interface Add {
+        (n: number, m: number) : number
+    }
 
     const add: Add = (num1, num2) => num1 + num2
 
