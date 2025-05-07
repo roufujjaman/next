@@ -77,3 +77,26 @@ function getMostExpensiveProduct(products: Product[]): Product | null {
     return product;
 }
 
+enum Day {
+  Monday,
+  Tuesday,
+  Wednesday,
+  Thursday,
+  Friday,
+  Saturday,
+  Sunday
+}
+
+function getDayType(day: Day): string {
+    if (day == 6){
+        return "Weekend";
+    } else {
+        return "Weekday";
+    }
+}
+
+async function squareAsync(n: number): Promise<number> {
+    return new Promise<number>((resolve, reject) => {
+
+    });
+}
