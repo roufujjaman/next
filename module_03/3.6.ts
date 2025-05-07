@@ -1,5 +1,5 @@
 {
-    // access modifiers
+    // getter setter
     class Account {
         public readonly id: number;
         public name: string;
@@ -10,21 +10,23 @@
             this.name = name;
             this._balance = initialBalanc;
         }
+        
+        get balance(): number{
+            return this._balance;
+        }
 
-        deposit(amount: number): void{
+
+        set deposit(amount: number){
             // other type cheking
             this._balance += amount;
         }
 
-        balance(): number{
-            return this._balance;
-        }
     }
 
     
     const user1: Account = new Account(111, 'Juliett', 200);
     
-    user1.deposit(500);
-    console.log(user1.balance());
+    user1.deposit = 500;
+    console.log(user1.balance);
 
 }

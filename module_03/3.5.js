@@ -1,30 +1,21 @@
+"use strict";
 {
     // access modifiers
     class Account {
-        public readonly id: number;
-        public name: string;
-        private _balance: number;
-
-        constructor(id: number, name: string, initialBalanc: number){
+        constructor(id, name, initialBalanc) {
             this.id = id;
             this.name = name;
             this._balance = initialBalanc;
         }
-
-        deposit(amount: number): void{
+        deposit(amount) {
             // other type cheking
             this._balance += amount;
         }
-
-        balance(): number{
+        balance() {
             return this._balance;
         }
     }
-
-    
-    const user1: Account = new Account(111, 'Juliett', 200);
-    
+    const user1 = new Account(111, 'Juliett', 200);
     user1.deposit(500);
     console.log(user1.balance());
-
 }
