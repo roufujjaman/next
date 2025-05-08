@@ -12,7 +12,7 @@
 
 ### module - 02
 
-- [2.01](./module_02/2.1.ts) - `Type Assertion`
+- [2.01](./module_02/2.1.ts) - `Type Assertion`, `Custom Error`
 - [2.02](./module_02/2.2.ts) - `Interface`
 - [2.03](./module_02/2.3.ts) - `Generics`
 - [2.04](./module_02/2.04.ts) - `Generics`

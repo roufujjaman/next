@@ -88,15 +88,20 @@ enum Day {
 }
 
 function getDayType(day: Day): string {
-    if (day == 6){
+    if (day == 4 || day == 5){
         return "Weekend";
     } else {
         return "Weekday";
     }
 }
 
-async function squareAsync(n: number): Promise<number> {
+async function squareAsync(num: number): Promise<number> {
     return new Promise<number>((resolve, reject) => {
-
-    });
+        if(num > 0){
+            num = num * num;
+            setInterval(()=>resolve(num), 1000);
+        } else {
+            reject(new Error('Negative number not allowed'));
+        }
+    })
 }
