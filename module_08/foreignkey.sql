@@ -11,7 +11,7 @@ CREATE TABLE "post" (
     "user_id" INTEGER,
     "title" TEXT NOT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY ("user_id") REFERENCES "user"("id")
+    FOREIGN KEY ("user_id") REFERENCES "user"("id") ON DELETE CASCADE
 );
 
 -- inserting values to user
@@ -54,8 +54,16 @@ ALTER COLUMN "user_id" SET NOT NULL;
 -- 4. Set default value
 
 
-ALTER TABLE "user"
-ALTER COLUMN "user"
+-- -- Step 1: Drop the existing foreign key constraint
+-- ALTER TABLE "post"
+-- DROP CONSTRAINT IF EXISTS post_user_id_fkey;
+
+-- -- Step 2: Add the foreign key with ON DELETE CASCADE
+-- ALTER TABLE "post"
+-- ADD CONSTRAINT post_user_id_fkey
+-- FOREIGN KEY ("user_id") REFERENCES "user"("id") ON DELETE CASCADE;
+
+
 DELETE FROM "user"
 WHERE "id" = 1;
 
