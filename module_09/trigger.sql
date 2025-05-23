@@ -34,3 +34,6 @@ DELETE FROM "user" WHERE "username" = 'user4040';
 
 SELECT * FROM "user";
 SELECT * FROM "deleted_user";
+
+
+SHOW data_directory;
