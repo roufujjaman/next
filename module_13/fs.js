@@ -1,30 +1,6 @@
-const fs = require("fs");
+const fs = require("node:fs");
+
+const data = fs.readFileSync("./hello.txt", {encoding: "utf-8"});
 
 
-let text = "default";
-
-fs.readFile("./hello.txt", {encoding: "utf-8"}, (err, data) => {
-    if (err) {
-        console.log("something went wrong", err.message);
-        return;
-    }
-
-    text = data;
-    console.log(data);
-});
-
-console.log("task 2");
-console.log(text);
-
-text = "writing file from node";
-
-fs.writeFile("./hello.txt", text, {encoding: "utf-8"}, (err) => {
-    console.log("came here");
-    if (err) {
-        console.log("could not write the file");
-        return;
-    }
-
-    // console.log(text);
-})
-
+console.log(data);

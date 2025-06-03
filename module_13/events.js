@@ -1,21 +1,21 @@
 const EventEmitter = require("node:events");
 
+class Submission extends EventEmitter {};
 
-class MyAlarm extends EventEmitter {};
 
-const myAlarm = new MyAlarm();
+const submission = new Submission();
 
-myAlarm.on("morning", () => {
-    console.log("wake up wakeup, go to work");
-})
+submission.on("50", () =>
+    console.log("it's half done")
+);
 
-myAlarm.on("noon", () => {
-    console.log("focus on your work");
-})
+submission.on("75", () =>
+    console.log("it's almost done")
+);
 
-myAlarm.on("evening", () => {
-    console.log("wrap up your work, time to go home");
-})
+submission.on("100", () =>
+    console.log("it's finally done")
+);
 
-myAlarm.emit("morning");
-myAlarm.emit("evening");
+submission.emit("50");
+submission.emit("100");

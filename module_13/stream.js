@@ -1,5 +1,10 @@
-const api = "http://api.open-notify.org/astros.json";
+function fetchData(id) {
+    return new Promise((resolve) => 
+        setTimeout(() => 
+            resolve("working")
+        , 1000)
+    )
+}
 
-fetch(api)
-    .then((res) => res.json())
-    .then(console.log)
+
+fetchData(100).then((data) => console.log(data))
