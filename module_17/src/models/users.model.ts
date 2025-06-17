@@ -1,4 +1,4 @@
-import mongoose, { model, Schema } from "mongoose";
+import { model, Schema } from "mongoose";
 import { IUser } from "../interfaces/user.interfaces";
 
 const userSchema = new Schema<IUser>({
@@ -26,6 +26,10 @@ const userSchema = new Schema<IUser>({
         enum: ["user", "admin"],
         default: "user"
     }
-})
+},
+    {
+        versionKey: false,
+        timestamps: true
+    })
 
 export const User = model("User", userSchema);

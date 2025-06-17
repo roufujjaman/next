@@ -13,10 +13,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const note_1 = __importDefault(require("./controllers/note"));
+const notes_1 = require("./controllers/notes");
+const users_1 = require("./controllers/users");
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
-app.use("/note", note_1.default);
+app.use("/notes", notes_1.notesRouter);
+app.use("/users", users_1.userRouter);
 app.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     res.send("<h1>Welcome to TODO</h1>");
 }));

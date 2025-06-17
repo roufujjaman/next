@@ -27,5 +27,8 @@ const userSchema = new mongoose_1.Schema({
         enum: ["user", "admin"],
         default: "user"
     }
+}, {
+    versionKey: false,
+    timestamps: true
 });
 exports.User = (0, mongoose_1.model)("User", userSchema);

@@ -1,7 +1,7 @@
 import express, { NextFunction, Request, Response } from "express";
 import { Notes } from "../models/notes.model";
 
-const router = express.Router();
+const notesRouter = express.Router();
 
 // testing middleware
 const timeLog = (req: Request, res: Response, next: NextFunction) => {
@@ -9,12 +9,11 @@ const timeLog = (req: Request, res: Response, next: NextFunction) => {
     next();
 }
 
-router.use(timeLog);
+notesRouter.use(timeLog);
 
 
-router.post("/", async (req: Request, res: Response) => {
+notesRouter.post("/", async (req: Request, res: Response) => {
     const data = req.body;
-    console.log(typeof data);
 
     const note = await Notes.create(data);
 
@@ -26,7 +25,7 @@ router.post("/", async (req: Request, res: Response) => {
     })
 })
 
-router.get("/", async (req: Request, res: Response) => {
+notesRouter.get("/", async (req: Request, res: Response) => {
     const notes = await Notes.find();
 
     res.status(201).json({
@@ -35,7 +34,7 @@ router.get("/", async (req: Request, res: Response) => {
     })
 })
 
-router.get("/:id", async (req: Request, res: Response) => {
+notesRouter.get("/:id", async (req: Request, res: Response) => {
     const noteID = req.params.id;
 
     try {
@@ -53,7 +52,7 @@ router.get("/:id", async (req: Request, res: Response) => {
     }
 })
 
-router.get("/title/:title", async (req: Request, res: Response) => {
+notesRouter.get("/title/:title", async (req: Request, res: Response) => {
     const noteTitle = req.params.title;
 
     const note = await Notes.findOne({ title: noteTitle });
@@ -64,7 +63,7 @@ router.get("/title/:title", async (req: Request, res: Response) => {
 
 })
 
-router.patch("/:id", async (req: Request, res: Response) => {
+notesRouter.patch("/:id", async (req: Request, res: Response) => {
     const noteID = req.params.id;
     const data = req.body;
 
@@ -82,7 +81,7 @@ router.patch("/:id", async (req: Request, res: Response) => {
     }
 })
 
-router.delete("/:id", async (req: Request, res: Response) => {
+notesRouter.delete("/:id", async (req: Request, res: Response) => {
     const noteID = req.params.id;
 
 
@@ -94,4 +93,4 @@ router.delete("/:id", async (req: Request, res: Response) => {
 
 })
 
-export default router;
+export { notesRouter };
