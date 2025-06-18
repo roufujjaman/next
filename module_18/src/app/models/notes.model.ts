@@ -1,4 +1,4 @@
-import { model, Schema } from "mongoose";
+import { model, Schema, Types } from "mongoose";
 import { INote } from "../interfaces/note.interfaces";
 
 const noteSchema = new Schema<INote>(
@@ -14,6 +14,11 @@ const noteSchema = new Schema<INote>(
         tags: {
             label: { type: String, required: true },
             color: { type: String, default: "black" }
+        },
+        user: {
+            type: Schema.Types.ObjectId,
+            ref: "User",
+            required: true
         }
     },
     {

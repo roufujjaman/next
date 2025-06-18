@@ -33,7 +33,7 @@ notesRouter.post("/", (req, res) => __awaiter(void 0, void 0, void 0, function* 
     });
 }));
 notesRouter.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const notes = yield notes_model_1.Notes.find();
+    const notes = yield notes_model_1.Notes.find().populate("user");
     res.status(201).json({
         message: "📝 All Notes",
         notes

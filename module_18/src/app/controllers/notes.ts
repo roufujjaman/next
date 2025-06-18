@@ -26,7 +26,7 @@ notesRouter.post("/", async (req: Request, res: Response) => {
 })
 
 notesRouter.get("/", async (req: Request, res: Response) => {
-    const notes = await Notes.find();
+    const notes = await Notes.find().populate("user");
 
     res.status(201).json({
         message: "📝 All Notes",

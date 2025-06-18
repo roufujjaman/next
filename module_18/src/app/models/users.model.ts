@@ -1,5 +1,14 @@
 import { model, Schema } from "mongoose";
-import { IUser } from "../interfaces/user.interfaces";
+import { IAddress, IUser } from "../interfaces/user.interfaces";
+
+const addressSchema = new Schema<IAddress>({
+    street: { type: String },
+    city: { type: String },
+    zip: { type: Number }
+},
+    {
+        _id: false
+    });
 
 const userSchema = new Schema<IUser>({
     firstName: {
@@ -29,7 +38,7 @@ const userSchema = new Schema<IUser>({
         trim: true,
         validate: {
             validator: function (value: string) {
-                return value.endsWith(".com");
+                return /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(value);
             },
             message: function (props) {
                 return `Email ${props.value} is not valid`
@@ -49,7 +58,8 @@ const userSchema = new Schema<IUser>({
             message: "{VALUE} IS NOT SUPPORTED"
         },
         default: "USER"
-    }
+    },
+    address: { type: addressSchema }
 },
     {
         versionKey: false,

@@ -2,6 +2,13 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.User = void 0;
 const mongoose_1 = require("mongoose");
+const addressSchema = new mongoose_1.Schema({
+    street: { type: String },
+    city: { type: String },
+    zip: { type: Number }
+}, {
+    _id: false
+});
 const userSchema = new mongoose_1.Schema({
     firstName: {
         type: String,
@@ -30,7 +37,7 @@ const userSchema = new mongoose_1.Schema({
         trim: true,
         validate: {
             validator: function (value) {
-                return value.endsWith(".com");
+                return /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(value);
             },
             message: function (props) {
                 return `Email ${props.value} is not valid`;
@@ -50,7 +57,8 @@ const userSchema = new mongoose_1.Schema({
             message: "{VALUE} IS NOT SUPPORTED"
         },
         default: "USER"
-    }
+    },
+    address: { type: addressSchema }
 }, {
     versionKey: false,
     timestamps: true
