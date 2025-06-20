@@ -2,6 +2,10 @@ import express, { Request, Response } from "express";
 import { User } from "../models/users.model";
 import { Notes } from "../models/notes.model";
 import { z } from "zod";
+import bcrypt from "bcryptjs";
+import { IUser } from "../interfaces/user.interfaces";
+
+
 
 const userRouter = express.Router();
 
@@ -27,9 +31,9 @@ userRouter.post("/", async (req: Request, res: Response) => {
     // );
     try {
 
-        // const data = await UserZod.parseAsync(req.body);
-        const data = req.body;
-        const user = await User.create(data);
+        const body = req.body;
+
+        const user = await User.create(body);
 
         res.status(201).json(
             {
@@ -50,7 +54,15 @@ userRouter.post("/", async (req: Request, res: Response) => {
 });
 
 userRouter.get("/", async (req: Request, res: Response) => {
-    const users = await User.find();
+    const userEmail = req.query.email ? req.query.email : "";
+
+    let users = []
+    if (userEmail) {
+        users = await User.find({ email: userEmail });
+    } else {
+        users = await User.find().sort({ "age": -1 }).limit(5);
+    }
+
 
     res.status(201).json(
         {
@@ -86,7 +98,7 @@ userRouter.patch("/:id", async (req: Request, res: Response) => {
 
 userRouter.delete("/:id", async (req: Request, res: Response) => {
     const userID = req.params.id;
-    await Notes.findByIdAndDelete(userID);
+    await User.findOneAndDelete({ _id: userID });
 
     res.status(201).json({
         "message": "❌ USER DELTED"

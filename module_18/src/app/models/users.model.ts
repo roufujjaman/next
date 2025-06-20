@@ -1,5 +1,7 @@
-import { model, Schema } from "mongoose";
-import { IAddress, IUser } from "../interfaces/user.interfaces";
+import { Model, model, Schema, SchemaOptions, version } from "mongoose";
+import { IAddress, IUser, UserMethods, UserStatics } from "../interfaces/user.interfaces";
+import bcrypt from "bcryptjs";
+import { Notes } from "./notes.model";
 
 const addressSchema = new Schema<IAddress>({
     street: { type: String },
@@ -9,8 +11,12 @@ const addressSchema = new Schema<IAddress>({
     {
         _id: false
     });
-
-const userSchema = new Schema<IUser>({
+const opts = {
+    versionKey: false,
+    timestamps: true,
+    toJSON: { virtuals: true }
+}
+const userSchema = new Schema<IUser, UserStatics, UserMethods>({
     firstName: {
         type: String,
         // custom error message - array syntax
@@ -60,10 +66,34 @@ const userSchema = new Schema<IUser>({
         default: "USER"
     },
     address: { type: addressSchema }
-},
-    {
-        versionKey: false,
-        timestamps: true
-    })
+}, opts);
 
-export const User = model("User", userSchema);
+userSchema.method("hashPassword", async function (password: string): Promise<string> {
+    const hash = await bcrypt.hash(password, 10);
+    return hash;
+})
+
+userSchema.static('hashPassword', async function (password: string): Promise<string> {
+    const hash = await bcrypt.hash(password, 10);
+    return hash;
+});
+
+console.log(userSchema.methods);
+
+userSchema.pre("save", async function (data) {
+    this.password = await bcrypt.hash(this.password, 10);
+});
+
+userSchema.post("save", function (doc) {
+    console.log(`%s has been saved`, doc._id);
+})
+
+userSchema.post("findOneAndDelete", async function (doc) {
+    await Notes.deleteMany({ user: doc._id });
+})
+
+userSchema.virtual('fullName').get(function () {
+    return `${this.firstName} ${this.lastName}`
+})
+
+export const User = model<IUser, UserStatics>("User", userSchema);

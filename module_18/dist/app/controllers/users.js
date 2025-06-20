@@ -15,7 +15,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.userRouter = void 0;
 const express_1 = __importDefault(require("express"));
 const users_model_1 = require("../models/users.model");
-const notes_model_1 = require("../models/notes.model");
 const zod_1 = require("zod");
 const userRouter = express_1.default.Router();
 exports.userRouter = userRouter;
@@ -38,9 +37,8 @@ userRouter.post("/", (req, res) => __awaiter(void 0, void 0, void 0, function* (
     //     }
     // );
     try {
-        // const data = await UserZod.parseAsync(req.body);
-        const data = req.body;
-        const user = yield users_model_1.User.create(data);
+        const body = req.body;
+        const user = yield users_model_1.User.create(body);
         res.status(201).json({
             "success": true,
             "message": "✅ USER CREATED",
@@ -56,7 +54,14 @@ userRouter.post("/", (req, res) => __awaiter(void 0, void 0, void 0, function* (
     }
 }));
 userRouter.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const users = yield users_model_1.User.find();
+    const userEmail = req.query.email ? req.query.email : "";
+    let users = [];
+    if (userEmail) {
+        users = yield users_model_1.User.find({ email: userEmail });
+    }
+    else {
+        users = yield users_model_1.User.find().sort({ "age": -1 }).limit(5);
+    }
     res.status(201).json({
         "message": "✅ ALL USERS",
         users
@@ -82,7 +87,7 @@ userRouter.patch("/:id", (req, res) => __awaiter(void 0, void 0, void 0, functio
 }));
 userRouter.delete("/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const userID = req.params.id;
-    yield notes_model_1.Notes.findByIdAndDelete(userID);
+    yield users_model_1.User.findOneAndDelete({ _id: userID });
     res.status(201).json({
         "message": "❌ USER DELTED"
     });
