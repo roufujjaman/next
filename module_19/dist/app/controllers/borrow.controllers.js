@@ -35,36 +35,36 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-var mongoose_1 = __importDefault(require("mongoose"));
-var app_1 = require("./app");
-var port = 3000;
-function main() {
-    return __awaiter(this, void 0, void 0, function () {
-        var error_1;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    _a.trys.push([0, 2, , 3]);
-                    return [4 /*yield*/, mongoose_1.default.connect("mongodb+srv://".concat(process.env.USER_ID, ":").concat(process.env.USER_PASS, "@cluster0.ajfqpxx.mongodb.net/library?retryWrites=true&w=majority&appName=Cluster0"))];
-                case 1:
-                    _a.sent();
-                    console.log("mongoose connected");
-                    return [3 /*break*/, 3];
-                case 2:
-                    error_1 = _a.sent();
-                    console.log(error_1);
-                    return [3 /*break*/, 3];
-                case 3:
-                    app_1.app.listen(port, function () {
-                        console.log("\u2705 APP LISTENING AT PORT ".concat(port));
-                    });
-                    return [2 /*return*/];
-            }
-        });
+exports.borrowRouter = void 0;
+var express_1 = require("express");
+var borrow_models_1 = require("../models/borrow.models");
+exports.borrowRouter = (0, express_1.Router)();
+exports.borrowRouter.post("/", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var data, borrw, error_1;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                data = req.body;
+                return [4 /*yield*/, borrow_models_1.Borrow.create(req.body)];
+            case 1:
+                borrw = _a.sent();
+                res.status(200).json({
+                    "success": true,
+                    "message": "Book borrowed successfully",
+                    "data": borrw
+                });
+                return [3 /*break*/, 3];
+            case 2:
+                error_1 = _a.sent();
+                res.status(500).json({
+                    "message": "Faile to borrow book",
+                    "success": false,
+                    error: error_1
+                });
+                return [3 /*break*/, 3];
+            case 3: return [2 /*return*/];
+        }
     });
-}
-main();
+}); });

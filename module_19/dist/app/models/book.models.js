@@ -1,23 +1,22 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Book = exports.BookGenre = void 0;
-const mongoose_1 = require("mongoose");
-exports.BookGenre = [
-    "FICTION",
-    "NON_FICTION",
-    "SCIENCE",
-    "HISTORY",
-    "BIOGRAPHY",
-    "FANTASY"
-];
-const BookSchema = new mongoose_1.Schema({
+exports.Book = void 0;
+var mongoose_1 = require("mongoose");
+var BookSchema = new mongoose_1.Schema({
     title: { type: String, required: true, trim: true },
     author: { type: String, required: true, trim: true },
     genre: {
         type: String,
         trim: true,
         required: true,
-        enum: exports.BookGenre
+        enum: [
+            "FICTION",
+            "NON_FICTION",
+            "SCIENCE",
+            "HISTORY",
+            "BIOGRAPHY",
+            "FANTASY"
+        ]
     },
     isbn: {
         type: String,
@@ -26,8 +25,12 @@ const BookSchema = new mongoose_1.Schema({
         unique: true
     },
     description: { type: String, trim: true },
-    copies: { type: Number, required: true },
-    available: { type: Boolean, required: true, default: true }
+    copies: {
+        type: Number,
+        required: true,
+        min: [1, "Minimum copy of the book: 1"]
+    },
+    available: { type: Boolean, default: true }
 }, {
     timestamps: true,
     versionKey: false
