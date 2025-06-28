@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon --env-file=.env ./dist/server.js"
+    "dev": "node --env-file=.env --watch ./dist/server.js",
+    "start": "node --env-file=.env ./dist/server.js"
   },
   "keywords": [],
   "author": "",
@@ -16,7 +17,6 @@
     "mongoose": "^8.16.1"
   },
   "devDependencies": {
-    "@types/express": "^5.0.3",
-    "nodemon": "^3.1.10"
+    "@types/express": "^5.0.3"
   }
 }
