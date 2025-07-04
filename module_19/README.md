@@ -2,9 +2,9 @@
 
 Links:
 
-> ✅ **[LIVE API LINK](library-ecru-beta.vercel.app/api/books)**
+> ✅ **[LIVE API LINK](https://library-ecru-beta.vercel.app/api/books)**
 
-> ✅ **[GITHUB REPO](library-ecru-beta.vercel.app/api/books)**
+> ✅ **[GITHUB REPO](https://github.com/roufujjaman/library)**
 
 Contents:
 
@@ -17,8 +17,8 @@ Contents:
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/yourproject.git
-cd yourproject
+git clone https://github.com/roufujjaman/library.git
+cd library
 
 # Install dependencies
 npm install
@@ -26,7 +26,7 @@ npm install
 # Rename the .env file and fill in the values to work with mongoDB
 mv .\.env.example .env
 
-# Run the server
+# Run the dev server
 npm run dev
 
 ```
@@ -141,10 +141,10 @@ RESPONSE : `200 OK`
 - Available filters
   | Key | Value Description |
   | --------- | ----------------------------------------------------------------------------- |
-  | `filter ` | Any of `FICTION`, `NON_FICTION`, `SCIENCE`, `HISTORY`, `BIOGRAPHY`, `FANTASY` |
-  | `sortBy ` | Any feild |
-  | `sort ` | `asc` or `desc` or `ascending` or `descending` |
-  | `limit ` | given vlaue or default `10` |
+  | `filter` | Any of `FICTION`, `NON_FICTION`, `SCIENCE`, `HISTORY`, `BIOGRAPHY`, `FANTASY` |
+  | `sortBy` | Any feild |
+  | `sort` | `asc` or `desc` or `ascending` or `descending` |
+  | `limit` | given vlaue or default `10` |
 
 ---
 
@@ -179,7 +179,7 @@ RESPONSE : `200 OK`
     "success": true,
     "message": "Book updated successfully",
     "data": {
-        "copies": 15, // increment copies with new added books
+        "copies": 15,
         ...
     }
 }
@@ -217,9 +217,9 @@ REQUEST : `POST /api/borrow`
 - Body Paremeters
   | Key | Value Description |
   | ---------- | ------------------------------- |
-  | `book ` | Must be a valid book id |
-  | `quanity ` | Must be a valid positive number |
-  | `dueDate ` | Must be a future date |
+  | `book` | Must be a valid book id |
+  | `quanity` | Must be a valid positive number |
+  | `dueDate` | Must be a future date |
 
 RESPONSE : `200 OK`
 
