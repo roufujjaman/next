@@ -1,3 +1,4 @@
+import type { RootState } from "@/app/store";
 import type { ITask } from "@/types";
 import { createSlice } from "@reduxjs/toolkit";
 
@@ -15,6 +16,14 @@ const initialState: IInitialState = {
 			isCompleted: false,
 			priority: "High",
 		},
+		{
+			id: "123123",
+			title: "Second Task",
+			description: "This is another task to do earliest",
+			dueDate: "2025-10-15",
+			isCompleted: false,
+			priority: "Low",
+		},
 	],
 };
 
@@ -23,5 +32,9 @@ export const taskSlice = createSlice({
 	initialState,
 	reducers: {},
 });
+
+export const selectTasks = (state: RootState) => {
+	return state.todo.tasks;
+};
 
 export default taskSlice.reducer;

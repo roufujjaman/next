@@ -1,3 +1,18 @@
+import { useAppSelector } from "@/app/hooks";
+import TaskCard from "@/components/module/task/taskCard";
+import { selectTasks } from "@/features/task/taskSlice";
+
 export default function Task() {
-	return <h1>This task page</h1>;
+	const tasks = useAppSelector(selectTasks);
+
+	console.log("tasks", tasks);
+	return (
+		<>
+			<div className="space-y-5">
+				{tasks.map((task) => (
+					<TaskCard task={task} />
+				))}
+			</div>
+		</>
+	);
 }
