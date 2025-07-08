@@ -1,5 +1,6 @@
 import { useAppSelector } from "@/app/hooks";
-import TaskCard from "@/components/module/task/taskCard";
+import { AddTaskModal } from "@/components/module/task/AddTaskModal";
+import TaskCard from "@/components/module/task/TaskCard";
 import { selectTasks } from "@/features/task/taskSlice";
 
 export default function Task() {
@@ -8,9 +9,13 @@ export default function Task() {
 	console.log("tasks", tasks);
 	return (
 		<>
+			<div className="flex justify-between mx-auto max-w-3xl items-center my-5">
+				<h1>Tasks</h1>
+				<AddTaskModal />
+			</div>
 			<div className="space-y-5">
 				{tasks.map((task) => (
-					<TaskCard task={task} />
+					<TaskCard task={task} key={task.id} />
 				))}
 			</div>
 		</>
