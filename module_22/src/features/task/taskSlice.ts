@@ -1,7 +1,6 @@
 import type { RootState } from "@/app/store";
 import type { ITask } from "@/types";
 import { createSlice, nanoid, type PayloadAction } from "@reduxjs/toolkit";
-import { FileEdit } from "lucide-react";
 
 interface IInitialState {
 	tasks: ITask[];
