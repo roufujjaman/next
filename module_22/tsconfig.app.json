@@ -7,12 +7,6 @@
 		"module": "ESNext",
 		"skipLibCheck": true,
 
-		// tailwind
-		"baseUrl": ".",
-		"paths": {
-			"@/*": ["./src/*"]
-		},
-
 		/* Bundler mode */
 		"moduleResolution": "bundler",
 		"allowImportingTsExtensions": true,
@@ -27,7 +21,13 @@
 		"noUnusedParameters": true,
 		"erasableSyntaxOnly": true,
 		"noFallthroughCasesInSwitch": true,
-		"noUncheckedSideEffectImports": true
+		"noUncheckedSideEffectImports": true,
+
+		// shadcd
+		"baseUrl": ".",
+		"paths": {
+			"@/*": ["./src/*"]
+		}
 	},
 	"include": ["src"]
 }
