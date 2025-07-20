@@ -1,19 +1,34 @@
 import { Button } from "@/components/ui/button";
-import {
-	Card,
-	CardAction,
-	CardContent,
-	CardDescription,
-	CardFooter,
-	CardHeader,
-	CardTitle,
-} from "@/components/ui/card";
+import { cn } from "@/lib/utils";
+import type { ITask } from "@/types";
+import { Trash } from "lucide-react";
 
-export function TaskCard() {
+interface IProps {
+	task: ITask;
+}
+
+export function TaskCard({ task }: IProps) {
 	return (
-		<div>
+		<div className="w-full border px-5 py-3 rounded-md">
+			<div className="flex justify-between items-center">
+				<div className="flex items-center gap-3">
+					<div
+						className={cn("size-3 rounded-full", {
+							"bg-red-500": task.priority === "High",
+							"bg-yellow-500": task.priority === "Medium",
+							"bg-green-500": task.priority === "Low",
+						})}
+					></div>
+					<h1>{task.title}</h1>
+				</div>
+				<div>
+					<Button>
+						<Trash />
+					</Button>
+				</div>
+			</div>
 			<div>
-				<h1>Task</h1>
+				<p>{task.description}</p>
 			</div>
 		</div>
 	);

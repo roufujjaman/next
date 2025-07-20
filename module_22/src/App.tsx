@@ -7,9 +7,7 @@ function App() {
 			<div className="max-w-7xl flex p-5 m-auto gap-10 items-center justify-between">
 				<Navbar />
 			</div>
-			<div className="max-w-7xl flex p-5 m-auto gap-10">
-				<Outlet />
-			</div>
+			<Outlet />
 		</>
 	);
 }
