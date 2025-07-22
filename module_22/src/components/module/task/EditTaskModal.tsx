@@ -33,34 +33,30 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { addTask } from "@/features/task/taskSlice";
+import { updateTask } from "@/features/task/taskSlice";
 import { cn } from "@/lib/utils";
 import type { ITask } from "@/types";
 import { format } from "date-fns/format";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, Pencil } from "lucide-react";
 import { useForm, type FieldValues, type SubmitHandler } from "react-hook-form";
 
-type DraftTask = Pick<ITask, "title" | "description" | "dueDate" | "priority">;
-
-export function AddTaskModal() {
-	const form = useForm();
-
-	console.log(form);
+export function EditTaskModal({ task }: { task: ITask }) {
+	const form = useForm({ defaultValues: task });
 	const dispatch = useAppDispatch();
 	const onSubmit: SubmitHandler<FieldValues> = (data) => {
-		console.log(data);
-		const taskData: DraftTask = {
+		const draftData: ITask = {
 			...data,
 			dueDate: data.dueDate.toString(),
 		};
-		dispatch(addTask(taskData as ITask));
+		dispatch(updateTask(draftData as ITask));
 	};
 	return (
 		<Dialog>
 			<form>
 				<DialogTrigger asChild>
-					{/* <Button variant="outline">Add Task</Button> */}
-					<Button>Add Task</Button>
+					<Button variant={"link"}>
+						<Pencil />
+					</Button>
 				</DialogTrigger>
 				<DialogContent className="sm:max-w-[425px]">
 					<DialogHeader>

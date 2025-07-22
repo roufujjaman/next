@@ -1,13 +1,18 @@
+import { useAppDispatch } from "@/app/hook";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { deleteTask, toggleComplete } from "@/features/task/taskSlice";
 import { cn } from "@/lib/utils";
 import type { ITask } from "@/types";
 import { Trash } from "lucide-react";
+import { EditTaskModal } from "./EditTaskModal";
 
 interface IProps {
 	task: ITask;
 }
 
 export function TaskCard({ task }: IProps) {
+	const dispatch = useAppDispatch();
 	return (
 		<div className="w-full border px-5 py-3 rounded-md">
 			<div className="flex justify-between items-center">
@@ -19,12 +24,23 @@ export function TaskCard({ task }: IProps) {
 							"bg-green-500": task.priority === "low",
 						})}
 					></div>
-					<h1>{task.title}</h1>
+					<h1 className={cn({ "line-through": task.isCompleted })}>
+						{task.title}
+					</h1>
 				</div>
-				<div>
-					<Button>
+				<div className="flex items-center justify-between">
+					<Button
+						variant={"link"}
+						onClick={() => dispatch(deleteTask(task.id))}
+					>
 						<Trash />
 					</Button>
+					<EditTaskModal task={task} />
+					<Checkbox
+						className="m-3"
+						checked={task.isCompleted}
+						onClick={() => dispatch(toggleComplete(task.id))}
+					/>
 				</div>
 			</div>
 			<div>
