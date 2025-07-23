@@ -40,148 +40,140 @@ import { format } from "date-fns/format";
 import { CalendarIcon } from "lucide-react";
 import { useForm, type FieldValues, type SubmitHandler } from "react-hook-form";
 
-type DraftTask = Pick<ITask, "title" | "description" | "dueDate" | "priority">;
-
 export function AddTaskModal() {
 	const form = useForm();
 
-	console.log(form);
 	const dispatch = useAppDispatch();
+
 	const onSubmit: SubmitHandler<FieldValues> = (data) => {
-		console.log(data);
-		const taskData: DraftTask = {
-			...data,
-			dueDate: data.dueDate.toString(),
-		};
-		dispatch(addTask(taskData as ITask));
+		dispatch(addTask(data as ITask));
 	};
+
 	return (
 		<Dialog>
-			<form>
-				<DialogTrigger asChild>
-					{/* <Button variant="outline">Add Task</Button> */}
-					<Button>Add Task</Button>
-				</DialogTrigger>
-				<DialogContent className="sm:max-w-[425px]">
-					<DialogHeader>
-						<DialogTitle>Add Task</DialogTitle>
-						<DialogDescription>Add task to your todo list</DialogDescription>
-					</DialogHeader>
-					<Form {...form}>
-						<form onSubmit={form.handleSubmit(onSubmit)}>
-							<FormField
-								control={form.control}
-								name="title"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Title</FormLabel>
-										<FormControl>
-											<Input
-												{...field}
-												value={field.value || ""}
-												placeholder="Write your title here"
-											/>
+			<DialogTrigger asChild>
+				{/* <Button variant="outline">Add Task</Button> */}
+				<Button>Add Task</Button>
+			</DialogTrigger>
+			<DialogContent className="sm:max-w-[425px]">
+				<DialogHeader>
+					<DialogTitle>Add Task</DialogTitle>
+					<DialogDescription>Add task to your todo list</DialogDescription>
+				</DialogHeader>
+				<Form {...form}>
+					<form onSubmit={form.handleSubmit(onSubmit)}>
+						<FormField
+							control={form.control}
+							name="title"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Title</FormLabel>
+									<FormControl>
+										<Input
+											{...field}
+											value={field.value || ""}
+											placeholder="Write your title here"
+										/>
+									</FormControl>
+									<FormDescription />
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={form.control}
+							name="description"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Description</FormLabel>
+									<FormControl>
+										<Textarea
+											{...field}
+											value={field.value || ""}
+											placeholder="Write your description here"
+										/>
+									</FormControl>
+									<FormDescription />
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={form.control}
+							name="priority"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Priority</FormLabel>
+									<Select
+										onValueChange={field.onChange}
+										defaultValue={field.value}
+									>
+										<FormControl className="w-full">
+											<SelectTrigger>
+												<SelectValue placeholder="Select priority" />
+											</SelectTrigger>
 										</FormControl>
-										<FormDescription />
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
-							<FormField
-								control={form.control}
-								name="description"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Description</FormLabel>
-										<FormControl>
-											<Textarea
-												{...field}
-												value={field.value || ""}
-												placeholder="Write your description here"
-											/>
-										</FormControl>
-										<FormDescription />
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
-							<FormField
-								control={form.control}
-								name="priority"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Priority</FormLabel>
-										<Select
-											onValueChange={field.onChange}
-											defaultValue={field.value}
-										>
-											<FormControl className="w-full">
-												<SelectTrigger>
-													<SelectValue placeholder="Select priority" />
-												</SelectTrigger>
+										<SelectContent>
+											<SelectItem value="high">High</SelectItem>
+											<SelectItem value="medium">Medium</SelectItem>
+											<SelectItem value="low">Low</SelectItem>
+										</SelectContent>
+									</Select>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={form.control}
+							name="dueDate"
+							render={({ field }) => (
+								<FormItem className="my-2">
+									<FormLabel>Due Date</FormLabel>
+									<Popover>
+										<PopoverTrigger asChild>
+											<FormControl>
+												<Button
+													variant={"outline"}
+													className={cn(
+														"w-[240px] pl-3 text-left font-normal",
+														!field.value && "text-muted-foreground"
+													)}
+												>
+													{field.value ? (
+														format(field.value, "PPP")
+													) : (
+														<span>Pick a date</span>
+													)}
+													<CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+												</Button>
 											</FormControl>
-											<SelectContent>
-												<SelectItem value="high">High</SelectItem>
-												<SelectItem value="medium">Medium</SelectItem>
-												<SelectItem value="low">Low</SelectItem>
-											</SelectContent>
-										</Select>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
-							<FormField
-								control={form.control}
-								name="dueDate"
-								render={({ field }) => (
-									<FormItem className="my-2">
-										<FormLabel>Due Date</FormLabel>
-										<Popover>
-											<PopoverTrigger asChild>
-												<FormControl>
-													<Button
-														variant={"outline"}
-														className={cn(
-															"w-[240px] pl-3 text-left font-normal",
-															!field.value && "text-muted-foreground"
-														)}
-													>
-														{field.value ? (
-															format(field.value, "PPP")
-														) : (
-															<span>Pick a date</span>
-														)}
-														<CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-													</Button>
-												</FormControl>
-											</PopoverTrigger>
-											<PopoverContent className="w-auto p-0" align="start">
-												<Calendar
-													mode="single"
-													selected={field.value}
-													onSelect={field.onChange}
-													// disabled={(date) =>
-													// 	date > new Date() || date < new Date("1900-01-01")
-													// }
-													captionLayout="dropdown"
-												/>
-											</PopoverContent>
-										</Popover>
-										<FormDescription>
-											Your date of birth is used to calculate your age.
-										</FormDescription>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
-							<div className="mt-3">
-								<Button type="submit">Submit</Button>
-							</div>
-						</form>
-					</Form>
-					<DialogFooter></DialogFooter>
-				</DialogContent>
-			</form>
+										</PopoverTrigger>
+										<PopoverContent className="w-auto p-0" align="start">
+											<Calendar
+												mode="single"
+												selected={field.value}
+												onSelect={field.onChange}
+												// disabled={(date) =>
+												// 	date > new Date() || date < new Date("1900-01-01")
+												// }
+												captionLayout="dropdown"
+											/>
+										</PopoverContent>
+									</Popover>
+									<FormDescription>
+										Your date of birth is used to calculate your age.
+									</FormDescription>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<div className="mt-3">
+							<Button type="submit">Submit</Button>
+						</div>
+					</form>
+				</Form>
+				<DialogFooter></DialogFooter>
+			</DialogContent>
 		</Dialog>
 	);
 }

@@ -5,7 +5,7 @@ import { deleteTask, toggleComplete } from "@/features/task/taskSlice";
 import { cn } from "@/lib/utils";
 import type { ITask } from "@/types";
 import { Trash } from "lucide-react";
-import { EditTaskModal } from "./EditTaskModal";
+import { EditTaskModal } from "@/components/module/task/EditTaskModal";
 
 interface IProps {
 	task: ITask;
@@ -27,6 +27,7 @@ export function TaskCard({ task }: IProps) {
 					<h1 className={cn({ "line-through": task.isCompleted })}>
 						{task.title}
 					</h1>
+					<p>Assigned To: {task.assignedTo ? task.assignedTo : "No One"}</p>
 				</div>
 				<div className="flex items-center justify-between">
 					<Button
