@@ -32,12 +32,11 @@ const userSlice = createSlice({
 	name: "user",
 	initialState,
 	reducers: {
-		addUser: (state, action: PayloadAction<IUser>) => {
+		addUser: (state, action: PayloadAction<DraftUser>) => {
 			const userData = createUser(action.payload);
 			state.users.push(userData);
 		},
 		deleteUser: (state, action: PayloadAction<string>) => {
-			console.log("cale");
 			state.users = state.users.filter((user) => user.id !== action.payload);
 		},
 	},

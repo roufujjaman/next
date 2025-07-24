@@ -18,19 +18,23 @@ import {
 import { Input } from "@/components/ui/input";
 import { addUser } from "@/features/user/userSlice";
 import type { IUser } from "@/types";
+import { useState } from "react";
 import { useForm, type FieldValues, type SubmitHandler } from "react-hook-form";
 
 export function AddUserModal() {
+	const [open, setOpen] = useState(false);
 	const form = useForm();
 
 	const dispatch = useAppDispatch();
 
 	const onSubmit: SubmitHandler<FieldValues> = (data) => {
 		dispatch(addUser(data as IUser));
+		setOpen(false);
+		form.reset();
 	};
 
 	return (
-		<Dialog>
+		<Dialog open={open} onOpenChange={setOpen}>
 			<DialogTrigger asChild>
 				<Button>Add User</Button>
 			</DialogTrigger>
