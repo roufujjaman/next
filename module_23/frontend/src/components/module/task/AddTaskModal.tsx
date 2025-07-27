@@ -33,10 +33,8 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { addTask } from "@/features/task/taskSlice";
-import { selectUsers } from "@/features/user/userSlice";
+import { useCreateTaskMutation } from "@/features/api/baseApi";
 import { cn } from "@/lib/utils";
-import type { ITask } from "@/types";
 import { format } from "date-fns/format";
 import { CalendarIcon } from "lucide-react";
 import { useState } from "react";
@@ -46,14 +44,10 @@ export function AddTaskModal() {
 	const [open, setOpen] = useState(false);
 	const form = useForm();
 
-	const dispatch = useAppDispatch();
+	const [createTask, { data, isLoading, isError }] = useCreateTaskMutation();
 
-	const users = useAppSelector(selectUsers);
-
-	console.log(users);
-
-	const onSubmit: SubmitHandler<FieldValues> = (data) => {
-		dispatch(addTask(data as ITask));
+	const onSubmit: SubmitHandler<FieldValues> = async (data) => {
+		await createTask(data);
 		setOpen(false);
 		form.reset();
 	};
@@ -170,7 +164,7 @@ export function AddTaskModal() {
 										</PopoverContent>
 									</Popover>
 									<FormDescription>
-										Your date of birth is used to calculate your age.
+										Add your date to finish your task
 									</FormDescription>
 									<FormMessage />
 								</FormItem>
@@ -191,11 +185,7 @@ export function AddTaskModal() {
 												<SelectValue placeholder="Select User" />
 											</SelectTrigger>
 										</FormControl>
-										<SelectContent>
-											{users.map((user) => (
-												<SelectItem value={user.id}>{user.name}</SelectItem>
-											))}
-										</SelectContent>
+										<SelectContent></SelectContent>
 									</Select>
 									<FormMessage />
 								</FormItem>

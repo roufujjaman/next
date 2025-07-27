@@ -33,7 +33,6 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { updateTask } from "@/features/task/taskSlice";
 import { cn } from "@/lib/utils";
 import type { ITask } from "@/types";
 import { format } from "date-fns/format";
@@ -42,14 +41,7 @@ import { useForm, type FieldValues, type SubmitHandler } from "react-hook-form";
 
 export function EditTaskModal({ task }: { task: ITask }) {
 	const form = useForm({ defaultValues: task });
-	const dispatch = useAppDispatch();
-	const onSubmit: SubmitHandler<FieldValues> = (data) => {
-		const draftData: ITask = {
-			...data,
-			dueDate: data.dueDate.toString(),
-		};
-		dispatch(updateTask(draftData as ITask));
-	};
+	const onSubmit: SubmitHandler<FieldValues> = (data) => {};
 	return (
 		<Dialog>
 			<form>

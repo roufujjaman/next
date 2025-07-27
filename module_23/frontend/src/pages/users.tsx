@@ -1,10 +1,6 @@
-import { useAppSelector } from "@/app/hook";
 import { AddUserModal } from "@/components/module/user/AddUserModal";
-import { UserCard } from "@/components/module/user/UserCard";
-import { selectUsers } from "@/features/user/userSlice";
 
 export default function User() {
-	const users = useAppSelector(selectUsers);
 	return (
 		<>
 			<div className="mx-auto max-w-7xl px-5">
@@ -21,9 +17,7 @@ export default function User() {
 					<AddUserModal />
 				</div>
 				<div className="flex flex-wrap justify-center gap-4">
-					{users.map((user) => (
-						<UserCard user={user} key={user.id} />
-					))}
+					{/* <UserCard user={user} key={user.id} /> */}
 				</div>
 			</div>
 		</>
