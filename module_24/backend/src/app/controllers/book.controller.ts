@@ -1,5 +1,7 @@
 import { Request, Response, Router } from "express";
 import { Book } from "../models/book.model";
+import { BookFilterQuery } from "../types/quer-params";
+import { parseSortVal } from "../utils/parseSortVal";
 
 export const bookRoute = Router();
 
@@ -11,40 +13,53 @@ bookRoute.post("/", async (req: Request, res: Response) => {
 			message: "Book Created Successfully",
 			data: book,
 		});
-	} catch (err) {
+	} catch (error) {
 		res.status(500).json({
 			success: false,
 			message: "Book Isn't Created",
-			error: err,
+			error,
 		});
 	}
 });
 
-type query = {
-	filter: string | null;
-	sortBy: string;
-	sort: "ASC" | "DESC";
-	limit: number;
-};
+bookRoute.get(
+	"/",
+	async (req: Request<{}, {}, {}, BookFilterQuery>, res: Response) => {
+		try {
+			const reqQuery = req.query;
 
-bookRoute.get("/", async (req: Request<query>, res: Response) => {
-	try {
-		const query = req.query;
+			const filter =
+				typeof reqQuery.filter === "string"
+					? { ["genre"]: reqQuery.filter.toUpperCase() }
+					: {};
 
-		const filters: query = {
-			filter: req.query.filter | null,
-		};
+			const sort =
+				typeof reqQuery.sortBy === "string"
+					? { [reqQuery.sortBy]: parseSortVal(reqQuery.sort) }
+					: {};
 
-		if (query.filter) {
+			console.log(sort);
+			const limit =
+				typeof reqQuery.limit === "string" && !isNaN(reqQuery.limit)
+					? parseInt(reqQuery.limit)
+					: 10;
+
+			const books = await Book.find(filter).sort(sort).limit(limit);
+
+			res.status(200).json({
+				success: true,
+				message: "Books Retieved Successfully",
+				data: books,
+			});
+		} catch (error) {
+			res.status(500).json({
+				success: false,
+				message: "Could Not Retrieve Any Books",
+				error,
+			});
 		}
-
-		console.log(typeof query);
-
-		console.log(query);
-		const books = await Book.find({});
-		res.status(200).json(books);
-	} catch (err) {}
-});
+	}
+);
 
 bookRoute.get("/:bookId", async (req: Request, res: Response) => {
 	try {
@@ -60,11 +75,81 @@ bookRoute.get("/:bookId", async (req: Request, res: Response) => {
 			message: "Book Retrieved Successfully",
 			data: book,
 		});
-	} catch (err) {
+	} catch (error) {
 		res.status(500).json({
 			success: false,
-			message: "Book isn't found",
-			error: err,
+			message: "Could Not Retrieve The Books",
+			error,
+		});
+	}
+});
+
+bookRoute.put("/:bookId", async (req: Request, res: Response) => {
+	try {
+		const { bookId } = req.params;
+		const { copies, ...otherData } = req.body;
+
+		const book = await Book.findById(bookId);
+
+		if (!book) {
+			return res.status(404).json({
+				success: false,
+				message: "Book Not Found",
+			});
+		}
+
+		if (copies !== undefined) {
+			const parsedCopies = parseInt(copies);
+
+			if (isNaN(parsedCopies)) {
+				return res.status(400).json({
+					success: false,
+					message: "Invalid 'copies' Value",
+				});
+			}
+
+			book.copies += parsedCopies;
+		}
+
+		book.set(otherData);
+		await book.save();
+
+		return res.status(200).json({
+			success: true,
+			message: "Book Updated Successfully",
+			data: book,
+		});
+	} catch (error) {
+		res.status(500).json({
+			success: false,
+			message: "Could Not Update The Book",
+			error,
+		});
+	}
+});
+
+bookRoute.delete("/:bookId", async (req: Request, res: Response) => {
+	try {
+		const bookId = req.params.bookId;
+		const book = await Book.findByIdAndDelete(bookId);
+
+		if (!book) {
+			return res.status(404).json({
+				success: false,
+				message: "Book Not Found",
+			});
+		}
+
+		return res.status(200).json({
+			success: true,
+			message: "Book Deleted Successfully",
+			data: book,
+		});
+	} catch (error) {
+		res.status(500).json({
+			success: false,
+			message: "Could Not Delete The Book",
+			error,
 		});
 	}
 });
