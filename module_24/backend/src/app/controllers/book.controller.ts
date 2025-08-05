@@ -1,6 +1,6 @@
 import { Request, Response, Router } from "express";
 import { Book } from "../models/book.model";
-import { BookFilterQuery } from "../types/quer-params";
+import { BookFilterQuery } from "../types/queryParams";
 import { parseSortVal } from "../utils/parseSortVal";
 
 export const bookRoute = Router();
