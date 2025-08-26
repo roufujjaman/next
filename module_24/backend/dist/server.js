@@ -14,18 +14,25 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importDefault(require("mongoose"));
 const app_1 = require("./app");
-const PORT = 3000;
 function main() {
-    return __awaiter(this, void 0, void 0, function* () {
+    return __awaiter(this, arguments, void 0, function* (local = true) {
         try {
-            yield mongoose_1.default.connect("mongodb://localhost:27017/lbms");
+            if (local) {
+                yield mongoose_1.default.connect(`mongodb://localhost:27017/lbms`);
+                console.log("✅ Connected to MongoDB (local server)");
+            }
+            else {
+                yield mongoose_1.default.connect(`mongodb+srv://${process.env.MONGO_USER_ID}:${process.env.MONGO_USER_PASS}@cluster0.ajfqpxx.mongodb.net/library?retryWrites=true&w=majority&appName=Cluster0`);
+                console.log("✅ Connected to MongoDB (server)");
+            }
         }
         catch (err) {
+            console.log("❌Could not connect to MongoDB");
             console.log(err);
         }
-        app_1.app.listen(PORT, () => {
-            console.log(`The server is listening at PORT: ${PORT}`);
+        app_1.app.listen(process.env.PORT, (err) => {
+            console.log(`✅ APP IS LISTENING AT PORT: ${process.env.PORT}`);
         });
     });
 }
-main();
+main(true);

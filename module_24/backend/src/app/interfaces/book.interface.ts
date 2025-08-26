@@ -3,7 +3,7 @@ export interface IBook {
 	author: string;
 	genre: string;
 	isbn: string;
+	description: string;
 	copies: number;
 	available: boolean;
-	actions: string;
 }

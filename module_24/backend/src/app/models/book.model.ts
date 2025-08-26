@@ -1,5 +1,6 @@
 import { model, Schema } from "mongoose";
 import { IBook } from "../interfaces/book.interface";
+import { Borrow } from "./borrow.model";
 
 const BookSchema = new Schema<IBook>(
 	{
@@ -24,18 +25,24 @@ const BookSchema = new Schema<IBook>(
 			trim: true,
 			unique: true,
 		},
+		description: {
+			type: String,
+			default: "",
+		},
 		copies: {
 			type: Number,
 			required: true,
 			validate: {
-				validator: function (values) {
-					return values >= 0;
+				validator: function (value) {
+					return value >= 0;
 				},
-				message: "INVALID COPIES NUMBER",
+				message: "Invalid copies number",
 			},
+			min: [0, "Invlaid copies number"],
 		},
 		available: {
 			type: Boolean,
+			required: true,
 			default: true,
 		},
 	},
@@ -44,5 +51,25 @@ const BookSchema = new Schema<IBook>(
 		timestamps: true,
 	}
 );
+
+BookSchema.pre<IBook>("save", function () {
+	this.available = this.copies > 0;
+});
+
+BookSchema.post("findOneAndUpdate", function (doc: IBook) {
+	if (doc) {
+		doc.available = doc.copies > 0;
+	}
+	console.log(this);
+});
+
+BookSchema.post("findOneAndDelete", async function (data) {
+	console.log(data);
+
+	if (data) {
+		console.log(data._id);
+		await Borrow.deleteMany({ book: data._id });
+	}
+});
 
 export const Book = model<IBook>("Book", BookSchema);

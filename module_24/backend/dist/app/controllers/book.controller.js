@@ -8,65 +8,68 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __rest = (this && this.__rest) || function (s, e) {
-    var t = {};
-    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
-        t[p] = s[p];
-    if (s != null && typeof Object.getOwnPropertySymbols === "function")
-        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
-            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
-                t[p[i]] = s[p[i]];
-        }
-    return t;
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.bookRoute = void 0;
 const express_1 = require("express");
 const book_model_1 = require("../models/book.model");
-const parseSortVal_1 = require("../utils/parseSortVal");
 exports.bookRoute = (0, express_1.Router)();
 exports.bookRoute.post("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const book = yield book_model_1.Book.create(req.body);
         res.status(200).json({
             success: true,
-            message: "Book Created Successfully",
+            message: "Book created successfully",
             data: book,
         });
     }
-    catch (error) {
+    catch (err) {
         res.status(500).json({
             success: false,
-            message: "Book Isn't Created",
-            error,
+            message: err._message || "Couldn't create the book",
+            error: err,
         });
     }
 }));
 exports.bookRoute.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const reqQuery = req.query;
-        const filter = typeof reqQuery.filter === "string"
-            ? { ["genre"]: reqQuery.filter.toUpperCase() }
-            : {};
-        const sort = typeof reqQuery.sortBy === "string"
-            ? { [reqQuery.sortBy]: (0, parseSortVal_1.parseSortVal)(reqQuery.sort) }
-            : {};
-        console.log(sort);
-        const limit = typeof reqQuery.limit === "string" && !isNaN(reqQuery.limit)
-            ? parseInt(reqQuery.limit)
-            : 10;
+        const data = req.query;
+        const filter = {};
+        const sort = {};
+        let limit = 10;
+        if (typeof data.filter === "string") {
+            filter["genre"] = data.filter.toUpperCase();
+        }
+        if (typeof data.sortBy == "string" && typeof data.sort === "string") {
+            sort[data.sortBy] = data.sort.toLowerCase();
+        }
+        if (typeof data.limit === "string") {
+            const parsed = parseInt(data.limit);
+            if (!isNaN(parsed)) {
+                limit = parsed;
+            }
+        }
         const books = yield book_model_1.Book.find(filter).sort(sort).limit(limit);
-        res.status(200).json({
-            success: true,
-            message: "Books Retieved Successfully",
-            data: books,
-        });
+        if (books.length === 0) {
+            console.log(books.length);
+            res.status(200).json({
+                success: false,
+                message: "No Books found with current filters",
+                data: books,
+            });
+        }
+        else {
+            res.status(200).json({
+                success: true,
+                message: "Books retrieved successfully",
+                data: books,
+            });
+        }
     }
-    catch (error) {
+    catch (err) {
         res.status(500).json({
             success: false,
-            message: "Could Not Retrieve Any Books",
-            error,
+            message: "No Books found",
+            error: err,
         });
     }
 }));
@@ -75,79 +78,84 @@ exports.bookRoute.get("/:bookId", (req, res) => __awaiter(void 0, void 0, void 0
         const bookId = req.params.bookId;
         const book = yield book_model_1.Book.findOne({ _id: bookId });
         if (!book) {
+            res.status(404).json({
+                success: false,
+                message: "Book isn't found",
+                data: null,
+            });
         }
-        res.status(200).json({
-            success: true,
-            message: "Book Retrieved Successfully",
-            data: book,
-        });
+        else {
+            res.status(200).json({
+                success: true,
+                message: "Book retrieved successfully",
+                data: book,
+            });
+        }
     }
-    catch (error) {
+    catch (err) {
         res.status(500).json({
             success: false,
-            message: "Could Not Retrieve The Books",
-            error,
+            message: "Book isn't found",
+            error: err,
         });
     }
 }));
-exports.bookRoute.put("/:bookId", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.bookRoute.put("/:bookId", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { bookId } = req.params;
-        const _a = req.body, { copies } = _a, otherData = __rest(_a, ["copies"]);
-        const book = yield book_model_1.Book.findById(bookId);
+        const updateBookData = req.body;
+        const bookId = req.params.bookId;
+        const book = yield book_model_1.Book.findByIdAndUpdate(bookId, updateBookData, {
+            new: true,
+            runValidators: true,
+        });
         if (!book) {
-            return res.status(404).json({
+            res.status(404).send({
                 success: false,
-                message: "Book Not Found",
+                message: "Book isn't found",
+                data: null,
             });
         }
-        if (copies !== undefined) {
-            const parsedCopies = parseInt(copies);
-            if (isNaN(parsedCopies)) {
-                return res.status(400).json({
-                    success: false,
-                    message: "Invalid 'copies' Value",
-                });
-            }
-            book.copies += parsedCopies;
+        else {
+            res.status(200).json({
+                success: true,
+                message: "Book updated successfully",
+                data: book,
+            });
         }
-        book.set(otherData);
-        yield book.save();
-        return res.status(200).json({
-            success: true,
-            message: "Book Updated Successfully",
-            data: book,
-        });
     }
-    catch (error) {
+    catch (err) {
         res.status(500).json({
             success: false,
-            message: "Could Not Update The Book",
-            error,
+            message: "Couldn't update the book",
+            error: err,
         });
     }
 }));
 exports.bookRoute.delete("/:bookId", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        const data = req.body;
         const bookId = req.params.bookId;
         const book = yield book_model_1.Book.findByIdAndDelete(bookId);
         if (!book) {
-            return res.status(404).json({
+            res.status(404).json({
                 success: false,
-                message: "Book Not Found",
+                message: "Book isn't found",
+                data: null,
             });
         }
-        return res.status(200).json({
-            success: true,
-            message: "Book Deleted Successfully",
-            data: book,
-        });
+        else {
+            res.status(200).json({
+                success: true,
+                message: "Book deleted successfully",
+                data: book,
+            });
+        }
     }
-    catch (error) {
+    catch (err) {
         res.status(500).json({
             success: false,
-            message: "Could Not Delete The Book",
-            error,
+            message: "Couldn't delete the book",
+            error: err,
         });
     }
 }));

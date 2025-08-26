@@ -6,11 +6,18 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.app = void 0;
 const express_1 = __importDefault(require("express"));
 const book_controller_1 = require("./app/controllers/book.controller");
+const borrow_controller_1 = require("./app/controllers/borrow.controller");
+const cors_1 = __importDefault(require("cors"));
 exports.app = (0, express_1.default)();
+exports.app.use((0, cors_1.default)({ origin: "http://localhost:5173" }));
 exports.app.use(express_1.default.json());
 exports.app.use("/api/books", book_controller_1.bookRoute);
-exports.app.get("/", (req, res) => {
+exports.app.use("/api/borrow", borrow_controller_1.borrowRouter);
+exports.app.get("/", (req, res, next) => {
     res.status(200).json({
-        message: "working",
+        message: "welcome",
     });
+});
+exports.app.use((req, res, next) => {
+    res.status(404).json({ message: "Route is not defined" });
 });
