@@ -47,9 +47,18 @@ export function AddTaskModal() {
 	const [createTask, { data, isLoading, isError }] = useCreateTaskMutation();
 
 	const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-		await createTask(data);
-		setOpen(false);
-		form.reset();
+		try {
+			const created = await createTask(data).unwrap();
+
+			// assuming created has a 'title' field
+			toast(`Task "${created.title}" has been created.`);
+
+			setOpen(false);
+			form.reset();
+		} catch (err) {
+			toast.error("Failed to create task.");
+			console.error(err);
+		}
 	};
 
 	return (
