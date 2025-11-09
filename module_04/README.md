@@ -1,58 +1,117 @@
-### `Types` vs. `Interfaces`: Differences
+## `Types` vs. `Interfaces`: Differences
 
-While `types` and `interfaces` in TypeScript share similarities in many use cases, they also have distinct differences.
+In TypeScript, both `types` and `interfaces` allow you to define the shape of data, but they have subtle differences that affect when and how you should use them.
 
-In TypeScript, a `type` is used to define the data type of any basic type or object. It can also serve as an alias for existing types. Essentially, `type` can represent any single or multiple primitive types, including all TypeScript types and objects.
+### `type`
+
+- A type is a versatile way to define a new type alias for any valid TypeScript type (primitive, union, tuple, object, etc.).
+- Can represent primitives, objects, arrays, tuples, unions, intersections, and more.
+- Cannot be reopened to add new properties (unlike interface).
 
 ```typescript
+// Primitive type alias
 type myString = string;
 
-type myCar = {
+// Object type
+type Car = {
   name: string;
   year: number;
 };
+
+// Union type
+type Skill = "html" | "css" | "javascript" | "typescript" | "python" | "go";
+
+// Intersection type
+type Person = { name: string; age: number };
+type Employee = { employeeId: number; skills: Skill[] };
+type Staff = Person & Employee;
+
+const user1: Staff = {
+  name: "Juliett",
+  age: 31,
+  employeeId: 300,
+  skills: ["css", "python"],
+};
 ```
 
-An `interface` in TypeScript, on the other hand, is primarily used to define the structure of objects. Although both type and `interface` can be used to describe objects, `interface` has some unique capabilities and is generally preferred for defining the shape of objects.
+#### ✅ Key advantages of type:
+
+- Can create `unions` and `intersections`.
+- Can alias any `type`, not just objects.
+- Great for complex type manipulations.
+
+### `Interface`
+
+- Primarily used to define object shapes (properties and methods).
+- Can be extended using extends or merged (declaration merging allows adding new properties later).
 
 ```typescript
 interface User {
   id: number;
   name: string;
 }
+
+// Extending an interface
+interface Employee extends User {
+  employeeId: number;
+  skills: Skill[];
+}
+
+const user2: Employee = {
+  id: 1,
+  name: "Alice",
+  employeeId: 100,
+  skills: ["typescript", "javascript"],
+};
 ```
 
-### `union` and `intersection` `types` in TypeScript
-
-`union` example:
+## `Union` and `Intersection` types in TypeScript
 
 ```typescript
-// union type
-type Skill = "html" | "css" | "javascript" | "typescript" | "python" | "go";
-const developer1: Skill = "python";
-```
+// Union type: a role can be either "admin", "editor", or "viewer"
+type Role = "admin" | "editor" | "viewer";
 
-`intersection` example:
-
-```typescript
-// intersection type
-type Person = {
+// Object type for basic user info
+type User = {
   name: string;
   age: number;
 };
 
+// Object type for employee details
 type Employee = {
   employeeId: number;
-  skill: Skill[];
+  skills: string[];
 };
 
-type Staff = Person & Employee;
+// Intersection type: an AdminEmployee must have properties of both User and Employee
+type AdminEmployee = User & Employee & { role: Role };
 
-// Since Staff is an intersection of Person and Employee, the user1: Staff object must contain all the fields from both types.
-const user1: Staff = {
-  name: "Juliett",
-  age: 31,
-  employeeId: 300,
-  skill: ["css", "python"],
+// Example usage
+const admin1: AdminEmployee = {
+  name: "Alice",
+  age: 28,
+  employeeId: 101,
+  skills: ["typescript", "react"],
+  role: "admin", // union type ensures role is restricted to valid options
+};
+
+const editor1: AdminEmployee = {
+  name: "Bob",
+  age: 35,
+  employeeId: 102,
+  skills: ["css", "javascript"],
+  role: "editor",
 };
 ```
+
+### ✅ Explanation:
+
+### `Union` Type (Role)
+
+- Limits the role property to specific values ("admin" | "editor" | "viewer").
+
+### `Intersection` Type (AdminEmployee)
+
+- Combines User + Employee + a role property.
+- Ensures the object has all properties from multiple types.
+- This pattern is useful for modeling complex objects like users in a system with different roles and attributes.
